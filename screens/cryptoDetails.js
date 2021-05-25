@@ -18,8 +18,8 @@ axios.defaults.headers.common['Accept-Encoding'] = 'gzip'
 
 const CryptoDetails = ({ navigation, route }) => {
 
-  const [time, setTime] = useState([10,20]);
-  const [price, setPrice] = useState([3,8]);
+  const [time, setTime] = useState([0,0]);
+  const [price, setPrice] = useState([0,0]);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [cryptoAmount, setCryptoAmount] = useState('');
@@ -100,7 +100,11 @@ const CryptoDetails = ({ navigation, route }) => {
                 <Text style={{fontWeight:"bold"}}>${parseFloat(route.params.priceUsd).toFixed(2)}</Text>
               </View>
               <View style={{justifyContent:"center",alignItems:"center",flex:1}}>
-                <Text style={{fontWeight:"bold"}}>{parseFloat(route.params.changePercent24Hr).toFixed(2)} %</Text>
+                <Text style={ 
+                 route.params.changePercent24Hr > 0
+                ? { fontWeight:"bold", color: "green" }
+                : { fontWeight:"bold", color: "red" }
+                }>{parseFloat(route.params.changePercent24Hr).toFixed(2)} %</Text>
               </View>
               {/* <TouchableOpacity style={{height:50,width:50, justifyContent:"center",alignItems:"center"}}>
                 <Text style={{color:"green"}}>Call</Text>
@@ -217,7 +221,7 @@ const CryptoDetails = ({ navigation, route }) => {
           <Modal   isVisible={isModalVisible}>
               <View style={styles.modalContainer}>
             
-                <Text style={styles.titleText}>Forms in React Native, The right way!</Text>
+                <Text style={styles.titleText}>Buy this crypto</Text>
 
                 <TextInput
                 style={styles.input}
@@ -296,7 +300,7 @@ const styles = StyleSheet.create({
   },
   appButtonContainer: {
     elevation: 8,
-    backgroundColor: "#0052d4",
+    backgroundColor: "#5000FF",
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,

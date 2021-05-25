@@ -16,7 +16,13 @@ function Item({ item }) {
         <Text style={{fontWeight:"bold"}}>${parseFloat(item.priceUsd).toFixed(2)}</Text>
       </View>
       <View style={{justifyContent:"center",alignItems:"center",flex:1}}>
-        <Text style={{fontWeight:"bold"}}>{parseFloat(item.changePercent24Hr).toFixed(2)} %</Text>
+        <Text style={{fontWeight:"bold"},
+        
+         item.changePercent24Hr > 0
+                ? {  color: "green" }
+                : {  color: "red" }
+        
+        }>{parseFloat(item.changePercent24Hr).toFixed(2)} %</Text>
       </View>
       {/* <TouchableOpacity style={{height:50,width:50, justifyContent:"center",alignItems:"center"}}>
         <Text style={{color:"green"}}>Call</Text>
