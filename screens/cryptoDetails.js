@@ -11,6 +11,7 @@ import {
 
 import axios from 'axios';
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 axios.defaults.headers.common['Accept-Encoding'] = 'gzip'
 
@@ -22,14 +23,55 @@ const CryptoDetails = ({ navigation, route }) => {
   const [price, setPrice] = useState([0,0]);
 
   const [isModalVisible, setModalVisible] = useState(false);
-  const [cryptoAmount, setCryptoAmount] = useState('');
+  const [isModalVisible2, setModalVisible2] = useState(false);
+
+  const [cryptoAmount, setCryptoAmount] = useState(0);
   
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+
+  
+  };
+
+  const toggleModal2 = () => {
+    setModalVisible2(!isModalVisible2);
   };
 
 
+  
+  const buy = async() => {
+
+    const email = await AsyncStorage.getItem('email');
+
+
+    const res = await axios.post(`http://192.168.8.74:3000/wallet/add`, {email : email, currencyPrice: route.params.priceUsd,cryp_name : route.params.name,value : cryptoAmount});
+    console.log('====================================££££££');
+    console.log(res.data);
+    console.log('====================================££££££');
+
+   
+    setModalVisible(!isModalVisible);
+
+  };
+
+
+   
+  const sell = async() => {
+
+    const email = await AsyncStorage.getItem('email');
+
+
+    const res = await axios.post(`http://192.168.8.74:3000/wallet/sell`, {email : email, currencyPrice: route.params.priceUsd,currencyName : route.params.name,value : cryptoAmount});
+    console.log('====================================££££££');
+    console.log(res.data);
+    console.log('====================================££££££');
+
+   
+    setModalVisible(!isModalVisible2);
+    
+
+  };
 
   const convertTimeToDay =  (timestamp) => {
                       
@@ -212,11 +254,12 @@ const CryptoDetails = ({ navigation, route }) => {
             <TouchableOpacity onPress={toggleModal} style={styles.appButtonContainer}>
               <Text style={styles.appButtonText}>Buy</Text>
             </TouchableOpacity>
-            <TouchableOpacity  style={styles.appButtonContainer}>
+            <TouchableOpacity  onPress={toggleModal2} style={styles.appButtonContainer}>
               <Text style={styles.appButtonText}>Sell</Text>
             </TouchableOpacity>
           </View>
 
+          {/* ------------------------------buy---------------------------- */}
 
           <Modal   isVisible={isModalVisible}>
               <View style={styles.modalContainer}>
@@ -230,10 +273,37 @@ const CryptoDetails = ({ navigation, route }) => {
                 />
 
                 <View  style={styles.ButtonContainer}>
-                  <TouchableOpacity onPress={toggleModal} style={styles.appButtonContainerNoBg2}>
+                  <TouchableOpacity onPress={buy} style={styles.appButtonContainerNoBg2}>
                     <Text style={styles.appButtonTextNoBg2}>Buy</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity  style={styles.appButtonContainerNoBg}>
+                  <TouchableOpacity  onPress={toggleModal} style={styles.appButtonContainerNoBg}>
+                    <Text style={styles.appButtonTextNoBg}>Back</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>
+          </Modal>
+
+
+                    {/* ------------------------------sell---------------------------- */}
+
+
+          <Modal   isVisible={isModalVisible2}>
+              <View style={styles.modalContainer}>
+            
+                <Text style={styles.titleText}>Sell this crypto</Text>
+
+                <TextInput
+                style={styles.input}
+                onChangeText={setCryptoAmount}
+                value={cryptoAmount}
+                />
+
+                <View  style={styles.ButtonContainer}>
+                  <TouchableOpacity onPress={sell} style={styles.appButtonContainerNoBg2}>
+                    <Text style={styles.appButtonTextNoBg2}>Sell</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity  onPress={toggleModal2} style={styles.appButtonContainerNoBg}>
                     <Text style={styles.appButtonTextNoBg}>Back</Text>
                   </TouchableOpacity>
                 </View>

@@ -18,6 +18,8 @@ export default function profile() {
   const [userEmail, setUserEmail] = useState('');
   const [userPhotoUrl, setUserPhotoUrl] = useState('');
 
+  const [wallet, setWallet] = useState('');
+
    // ----------------------------------------------save user to db -------------
          
 
@@ -27,10 +29,18 @@ const saveUser = async () => {
   try {
     const email = await AsyncStorage.getItem('email');
     const name = await AsyncStorage.getItem('name');
-    const res = await axios.post(`http://192.168.8.74:3000/user/add`, {email : email, name: name});
+    const photoUrl = await AsyncStorage.getItem('photoUrl');
+
+    const res = await axios.post(`http://192.168.8.74:3000/user/add`, {email : email, name: name,photoUrl : photoUrl});
              console.log('====================================££££££');
              console.log(res.data);
              console.log('====================================££££££');
+
+
+            setUserEmail(res.data.email)
+            setUsername(res.data.name)
+            setUserPhotoUrl(res.data.photoUrl)
+            setWallet(res.data.solde)
         
   } catch(e) {
    console.log(e);
@@ -40,23 +50,23 @@ const saveUser = async () => {
 
 const getData = async () => {
 
-  try {
-    const email = await AsyncStorage.getItem('email');
-    const name = await AsyncStorage.getItem('name');
-    const photoUrl = await AsyncStorage.getItem('photoUrl');
+  // try {
+  //   const email = await AsyncStorage.getItem('email');
+  //   const name = await AsyncStorage.getItem('name');
+  //   const photoUrl = await AsyncStorage.getItem('photoUrl');
 
-    setUserEmail(email)
-    setUsername(name)
-    setUserPhotoUrl(photoUrl)
+  //   setUserEmail(email)
+  //   setUsername(name)
+  //   setUserPhotoUrl(photoUrl)
         
-  } catch(e) {
-   console.log(e);
-  }
+  // } catch(e) {
+  //  console.log(e);
+  // }
 }
 
 
 useEffect(() => {
-  getData();
+  // getData();
   saveUser();
 },[]);
 
@@ -89,7 +99,7 @@ useEffect(() => {
                     
                         <View style={{justifyContent:"center",alignItems:"center",flex:1}}>
                             <Text style={{fontWeight:"bold"}}>My Wallet </Text>
-                            <Text >1000 DH</Text>
+                            <Text > $ {wallet} </Text>
                         </View>
                     </View>
                 </View>
